@@ -11,7 +11,7 @@
         @valueChange="input.handler"
       />
     </div>
-    <button @click="moveToInventory">
+    <button id="create-btn" @click="moveToInventory">
       <span>Criar personagem</span>
     </button>
   </div>
@@ -51,26 +51,36 @@ export default defineComponent({
           name: "playerClass",
           helpText: "Classe",
           placeholder: "Classe do personagem",
-          handler: (e: string) => this.handleinput(e, "playerClass"),
+          handler: (e: string) => this.handleInput(e, "playerClass"),
           type: "text",
         },
         {
           name: "inventorySlots",
           helpText: "Inventário",
           placeholder: "Espaço no inventário",
-          handler: (e: string) => this.handleinput(Number(e), "inventorySlots"),
+          handler: (e: string) => this.handleInput(Number(e), "inventorySlots"),
           type: "number",
         },
       ],
     };
   },
   methods: {
-    handleinput: function (value: never, changeVar: keyof PlayerInputProps) {
+    handleInput: function (value: never, changeVar: keyof PlayerInputProps) {
       this.inputs[changeVar] = value;
-      console.log(this.inputs);
     },
     moveToInventory: function () {
-      this.$router.push("Inventory");
+      let canCreate = true;
+      for (const key in this.inputs) {
+        if (!this.inputs[key as keyof PlayerInputProps]) {
+          console.log(this.inputs[key as keyof PlayerInputProps]);
+          canCreate = false;
+        }
+      }
+      if (canCreate) {
+        this.$router.push("Inventory");
+      } else {
+        window.alert("Preencha todos os campos");
+      }
     },
   },
 });
@@ -96,5 +106,32 @@ export default defineComponent({
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+}
+
+#create-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 40px;
+  border-radius: 16px;
+  background-color: #6acff1;
+  color: white;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#create-btn:hover {
+  animation: filterit 0.1s linear both;
+}
+
+@keyframes filterit {
+  0% {
+    filter: brightness(100%);
+  }
+  100% {
+    filter: brightness(90%);
+  }
 }
 </style>
