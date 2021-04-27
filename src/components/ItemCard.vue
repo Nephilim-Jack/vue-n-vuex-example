@@ -1,10 +1,12 @@
 <template>
   <div class="item-card">
     <span class="item-name">{{ item.name }}</span>
-    <span class="item-description">{{ item.description }}</span>
-    <span class="item-weight">{{ item.weight }} quilo(s)</span>
-    <span class="item-class">class: {{ item.class }}</span>
-    <span class="item-type">type: {{ item.type }}</span>
+    <div class="item-wrapper">
+      <span class="item-description">{{ item.description }}</span>
+      <span class="item-weight">{{ item.weight }} quilo(s)</span>
+      <span class="item-class">class: {{ item.class }}</span>
+      <span class="item-type">type: {{ item.type }}</span>
+    </div>
     <div class="icon-container">
       <img
         class="icon"
@@ -17,14 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
-interface ItemCard {
-  name: string;
-  description: string;
-  weight: number;
-  class: string;
-  type: string;
-}
+import { ItemCard } from "../interfaces";
 
 export default defineComponent({
   name: "ItemCard",
@@ -54,6 +49,8 @@ export default defineComponent({
   border: 1px solid #c9c9c9;
   margin: 0 16px;
   padding: 4px;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .item-card:hover {
@@ -64,7 +61,7 @@ export default defineComponent({
 .item-name {
   font-weight: bold;
   font-size: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   margin-top: 8px;
 }
 .icon-container {
@@ -73,5 +70,13 @@ export default defineComponent({
 .icon {
   width: 24px;
   height: 24px;
+}
+
+.item-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 160px;
 }
 </style>

@@ -20,12 +20,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import BaseInput from "../components/BaseInput.vue";
-
-interface PlayerInputProps {
-  playerName: string;
-  playerClass: string;
-  inventorySlots: number;
-}
+import { PlayerInputProps } from "../interfaces";
 
 export default defineComponent({
   name: "StartPage",
@@ -34,49 +29,35 @@ export default defineComponent({
   },
   data: function () {
     return {
-      inputs: {
-        playerName: "",
-        playerClass: "",
-        inventorySlots: 0,
-      },
       inputsData: [
         {
           name: "playerName",
           helpText: "Nome",
           placeholder: "Nome do personagem",
-          handler: (e: string) => this.handleInput(e, "playerName"),
+          handler: (e: string) => this.$store.commit("changePlayerName", e),
           type: "text",
         },
         {
           name: "playerClass",
           helpText: "Classe",
           placeholder: "Classe do personagem",
-          handler: (e: string) => this.handleInput(e, "playerClass"),
+          handler: (e: string) => this.$store.commit("changePlayerClass", e),
           type: "text",
         },
         {
           name: "inventorySlots",
           helpText: "Inventário",
           placeholder: "Espaço no inventário",
-          handler: (e: string) => this.handleInput(Number(e), "inventorySlots"),
+          handler: (e: string) =>
+            this.$store.commit("changeInventorySize", Number(e)),
           type: "number",
         },
       ],
     };
   },
   methods: {
-    handleInput: function (value: never, changeVar: keyof PlayerInputProps) {
-      this.inputs[changeVar] = value;
-    },
     moveToInventory: function () {
-      let canCreate = true;
-      for (const key in this.inputs) {
-        if (!this.inputs[key as keyof PlayerInputProps]) {
-          console.log(this.inputs[key as keyof PlayerInputProps]);
-          canCreate = false;
-        }
-      }
-      if (canCreate) {
+      if (this.$store.getters.enableMove) {
         this.$router.push("Inventory");
       } else {
         window.alert("Preencha todos os campos");

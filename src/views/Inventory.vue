@@ -1,10 +1,16 @@
 <template>
-  <button id="plus-btn">
+  <ItemModal v-if="showModal" />
+  <button @click="showModal = !showModal" id="plus-btn">
     <img :src="plusIcon" alt="" />
   </button>
-  <h1>Olá usuário, bem vindo ao seu inventário</h1>
+  <div id="header-bar">
+    <h1>
+      Olá {{ this.$store.getters.playerName }} o(a)
+      {{ this.$store.getters.playerClass }}, bem vindo(a) ao seu inventário
+    </h1>
+  </div>
   <ul id="items-list">
-    <li v-for="(item, index) in items" :key="index">
+    <li v-for="(item, index) in this.$store.state.items" :key="index">
       <ItemCard :itemIndex="index" :item="item" @removeAt="removeItem" />
     </li>
   </ul>
@@ -13,42 +19,22 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ItemCard from "../components/ItemCard.vue";
+import ItemModal from "../components/ItemModal.vue";
 export default defineComponent({
   name: "Inventory",
   components: {
     ItemCard,
+    ItemModal,
   },
   methods: {
     removeItem: function (itemIndex: number) {
-      this.items.splice(itemIndex, 1);
+      this.$store.commit("removeItemAt", itemIndex);
     },
   },
   data: function () {
     return {
-      items: [
-        {
-          name: "Espada",
-          description: "Uma espada simples",
-          weight: 2,
-          class: "Guerreiro",
-          type: "uma mão",
-        },
-        {
-          name: "Cajado",
-          description: "Uma cajado mágico",
-          weight: 1,
-          class: "Mago",
-          type: "duas mãos",
-        },
-        {
-          name: "Arco",
-          description: "Um arco recurvo",
-          weight: 2,
-          class: "Arqueiro",
-          type: "duas mãos",
-        },
-      ],
       plusIcon: require("../assets/plus.svg"),
+      showModal: false,
     };
   },
 });
@@ -87,5 +73,14 @@ export default defineComponent({
   filter: brightness(0) invert(1);
   width: 40px;
   height: 40px;
+}
+
+#header-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #2c3e50;
+  color: white;
 }
 </style>
